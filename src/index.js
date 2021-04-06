@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 
 import './index.css';
 import App from './App';
@@ -14,7 +15,20 @@ const rootReducer = combineReducers({
     res: ResultReducer
 })
 
-const store = createStore(rootReducer);
+const loggerMiddleware = store =>{
+    return next =>{
+        return action =>{
+            console.log("[Middleware dispatching:] ",action);
+            console.log("[Middleware state:]", store.getState())
+            const result = next(action)
+            return result;
+        }
+    };
+}
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // google chrome redux devTool setup
+
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(loggerMiddleware, thunk)) );  // applying middleware to store 
 
 ReactDOM.render(
   <React.StrictMode>
