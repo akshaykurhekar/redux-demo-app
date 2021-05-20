@@ -14,7 +14,7 @@ export const onStoreResult = (result) =>{
             // const oldState = getState().res.result;
             // console.log(oldState);          
             dispatch(saveResult(result));
-      }, 2000)        
+      }, 1000)        
     }
 }
 
